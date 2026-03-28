@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps System Dashboard | Project Alpha</title>
+    <meta name="description" content="A professional-grade DevOps monitoring and deployment dashboard.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0e14;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --success: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Layout */
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, var(--primary), #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        main {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .hero {
+            margin-bottom: 4rem;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px -10px var(--primary-glow);
+        }
+
+        .card h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .metric {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .sub-metric {
+            font-size: 0.9rem;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 1s ease-in-out;
+        }
+
+        .line-chart {
+            height: 80px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            margin-top: 2rem;
+        }
+
+        .bar {
+            flex: 1;
+            background: var(--primary);
+            opacity: 0.3;
+            border-radius: 2px 2px 0 0;
+            transition: var(--transition);
+        }
+
+        .card:hover .bar {
+            opacity: 0.8;
+        }
+
+        footer {
+            padding: 2rem 5%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 1.5rem 5%; }
+            main { padding: 2rem 5%; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">OPS_ALPHX</div>
+        <div class="status-badge">
+            <div class="dot"></div>
+            SYSTEM CLUSTER: STABLE
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>DevOps Pipeline <br><span style="color: var(--primary)">Integrity Optimized</span></h1>
+            <p>Seamlessly monitor, deploy, and scale infrastructure across multi-cloud environments with real-time telemetry.</p>
+        </section>
+
+        <section class="grid">
+            <div class="card" id="card-uptime">
+                <h3>Global Uptime</h3>
+                <div class="metric">99.98%</div>
+                <div class="sub-metric">
+                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
+                    +0.02% from last week
+                </div>
+                <div class="line-chart">
+                    <div class="bar" style="height: 60%"></div>
+                    <div class="bar" style="height: 40%"></div>
+                    <div class="bar" style="height: 80%"></div>
+                    <div class="bar" style="height: 70%"></div>
+                    <div class="bar" style="height: 90%"></div>
+                    <div class="bar" style="height: 100%"></div>
+                    <div class="bar" style="height: 85%"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-latency">
+                <h3>API Latency</h3>
+                <div class="metric">124ms</div>
+                <div class="sub-metric" style="color: #6366f1">
+                    Optimizing cache layers...
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 70%"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-deployments">
+                <h3>Active Deployments</h3>
+                <div class="metric" id="deploy-count">12</div>
+                <div class="sub-metric">
+                    Production v2.4.1 online
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 100%; background: var(--success)"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-cpu">
+                <h3>CPU Utilization</h3>
+                <div class="metric">42%</div>
+                <div class="sub-metric">
+                    Cluster: us-west-2
+                </div>
+                <div class="line-chart">
+                    <div class="bar" style="height: 20%"></div>
+                    <div class="bar" style="height: 45%"></div>
+                    <div class="bar" style="height: 30%"></div>
+                    <div class="bar" style="height: 60%"></div>
+                    <div class="bar" style="height: 42%"></div>
+                    <div class="bar" style="height: 38%"></div>
+                    <div class="bar" style="height: 45%"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2026 OpsAlpha Systems. Powering the future of automated infrastructure.
+    </footer>
+
+    <script>
+        // Simple interactivity for demonstration
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                console.log(`Inspecting ${card.id}`);
+            });
+        });
+
+        // Mock Dynamic Value
+        const deployCount = document.getElementById('deploy-count');
+        setInterval(() => {
+            const current = parseInt(deployCount.innerText);
+            if (Math.random() > 0.8) {
+                deployCount.innerText = current + (Math.random() > 0.5 ? 1 : -1);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
