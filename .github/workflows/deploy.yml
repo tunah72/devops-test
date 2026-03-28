@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Deploy to Web Server
 
 on:
   push:
@@ -12,13 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Copy index.html to Server
+      - name: Copy test.html to server
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: 152.42.202.85
-          username: root
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          source: "index.html"
-          target: "/var/www/html/"
+          source: "hehe.html"
+          target: "/var/www/html"
           overwrite: true
+          # strip_components: 0 (default) or 1?
+          # Since index.html is in the root, it will copy the file to /var/www/html/index.html
